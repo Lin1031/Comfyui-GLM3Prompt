@@ -6,7 +6,7 @@
 
 ### 使用说明
 
-使用[ChatGLM3-6B](https://github.com/THUDM/ChatGLM3)进行对话，暂不支持连续对话
+使用[ChatGLM3-6B](https://github.com/THUDM/ChatGLM3)进行对话，支持连续对话
 
 
 
@@ -58,7 +58,12 @@ pip install protobuf transformers==4.30.2 cpm_kernels torch>=2.0 gradio mdtex2ht
 
    https://github.com/THUDM/ChatGLM3/tree/main#%E4%BD%8E%E6%88%90%E6%9C%AC%E9%83%A8%E7%BD%B2
 
-   
 
 ![image-20231117214413053](https://s2.loli.net/2023/11/17/g42ucDVnXSANOCT.png)
+
+
+#### 效率基于3080ti
+首次使用需要加载模型
+![image](https://github.com/Lin1031/Comfyui-GLM3Prompt/assets/44975556/ec9c840b-19ca-4295-989c-45f3499c48b9)
+
 
