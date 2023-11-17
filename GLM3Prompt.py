@@ -7,7 +7,11 @@ class GLM3Prompt:
     """
 
     def __init__(self):
-        pass
+        from transformers import AutoTokenizer, AutoModel
+        self.tokenizer = AutoTokenizer.from_pretrained("/root/ComfyUI/models/chatglm3-6b", trust_remote_code=True)
+        self.model = AutoModel.from_pretrained("/root/ComfyUI/models/chatglm3-6b", trust_remote_code=True).quantize(4).cuda()
+        self.model = self.model.eval()
+        self.history = []
 
     @classmethod
     def INPUT_TYPES(s):
@@ -27,11 +31,7 @@ class GLM3Prompt:
     CATEGORY = "lam"
 
     def translate(self, text):
-        from transformers import AutoTokenizer, AutoModel
-        tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm3-6b/chatglm3-6b", trust_remote_code=True)
-        model = AutoModel.from_pretrained("THUDM/chatglm3-6b/chatglm3-6b", trust_remote_code=True).quantize(4).cuda()
-        model = model.eval()
-        reply, history = model.chat(tokenizer, text, history=[])
+        reply, self.history = self.model.chat(self.tokenizer, text, history=self.history)
         return (reply,)
 
 # A dictionary that contains all nodes you want to export with their names
