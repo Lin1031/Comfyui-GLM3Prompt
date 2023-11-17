@@ -1,4 +1,5 @@
 import json
+from transformers import AutoTokenizer, AutoModel
 
 
 class GLM3Prompt:
@@ -7,7 +8,6 @@ class GLM3Prompt:
     """
 
     def __init__(self):
-        from transformers import AutoTokenizer, AutoModel
         self.tokenizer = AutoTokenizer.from_pretrained("/root/ComfyUI/models/chatglm3-6b", trust_remote_code=True)
         self.model = AutoModel.from_pretrained("/root/ComfyUI/models/chatglm3-6b", trust_remote_code=True).quantize(4).cuda()
         self.model = self.model.eval()
