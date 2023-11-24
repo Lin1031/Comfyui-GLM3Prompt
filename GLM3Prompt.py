@@ -20,7 +20,7 @@ class GLM3Prompt:
         return {
             "required": {
                 "text": ("STRING", {"multiline": True}),
-                "unload": ("BOOLEAN", {"default": False}),
+                "unload": ("BOOLEAN", {"default": True}),
             },
         }
 
