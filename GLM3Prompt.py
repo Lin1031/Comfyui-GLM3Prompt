@@ -1,6 +1,7 @@
+import gc
 import json
 from transformers import AutoTokenizer, AutoModel
-
+from comfy.model_management import soft_empty_cache
 
 class GLM3Prompt:
     """
@@ -8,16 +9,18 @@ class GLM3Prompt:
     """
 
     def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained("/root/ComfyUI/models/chatglm3-6b", trust_remote_code=True)
-        self.model = AutoModel.from_pretrained("/root/ComfyUI/models/chatglm3-6b", trust_remote_code=True).quantize(4).cuda()
+        self.model_path = "/root/ComfyUI/models/chatglm3-6b"
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
+        self.model = AutoModel.from_pretrained(self.model_path, trust_remote_code=True).quantize(4).cuda()
         self.model = self.model.eval()
         self.history = []
 
     @classmethod
-    def INPUT_TYPES(s):
+    def INPUT_TYPES(cls):
         return {
             "required": {
-                "text": ("STRING", {"multiline": True})
+                "text": ("STRING", {"multiline": True}),
+                "unload": ("BOOLEAN", {"default": False}),
             },
         }
 
@@ -28,10 +31,28 @@ class GLM3Prompt:
 
     # OUTPUT_NODE = False
 
-    CATEGORY = "lam"
+    CATEGORY = "GLM3Prompt"
 
-    def translate(self, text):
-        reply, self.history = self.model.chat(self.tokenizer, text, history=self.history)
+    def translate(self, text, unload=False):
+        if self.tokenizer:
+            reply, self.history = self.model.chat(self.tokenizer, text, history=self.history)
+        else:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
+            self.model = AutoModel.from_pretrained(self.model_path, trust_remote_code=True).quantize(4).cuda()
+            self.model = self.model.eval()
+            reply, self.history = self.model.chat(self.tokenizer, text, history=self.history)
+
+        if unload:
+            # 清空 tokenizer 和其他字段
+            self.tokenizer = None
+            self.model = None
+            self.history = None
+            
+            # 垃圾回收和清空缓存
+            gc.collect()
+            soft_empty_cache()
+
+        
         return (reply,)
 
 # A dictionary that contains all nodes you want to export with their names
