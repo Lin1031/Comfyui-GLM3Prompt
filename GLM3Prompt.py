@@ -9,7 +9,7 @@ class GLM3Prompt:
     """
 
     def __init__(self):
-        self.model_path = "/root/ComfyUI/models/chatglm3-6b"
+        self.model_path = "THUDM/chatglm3-6b" # 修改这个路径为本地模型存放路径，不修改会自动下载模型
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
         self.model = AutoModel.from_pretrained(self.model_path, trust_remote_code=True).quantize(4).cuda()
         self.model = self.model.eval()
