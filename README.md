@@ -15,6 +15,7 @@
 ```
 pip install protobuf transformers==4.30.2 cpm_kernels torch>=2.0 gradio mdtex2html sentencepiece accelerate
 ```
+可能因为系统问题，无法安装成功（安装成功最后会有success），建议一个个安装，如果因为>=无法安装成功，建议尝试一下改成==
 
 ####  2. 下载代码
 
